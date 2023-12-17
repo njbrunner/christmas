@@ -1,0 +1,88 @@
+<html data-bs-theme="dark">
+
+<head>
+  <title>Christmas Conversations</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet"
+    href="./style/style.css">
+</head>
+
+<body class="snowfall">
+  <div class="container my-5">
+    <div class="p-5 bg-body-tertiary rounded-3">
+      <h1>Christmas Conversations</h1>
+    </div>
+    <div class="dropdown text-center"
+      style="margin: 2rem;">
+      <button class="btn btn-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Select A Family Member
+      </button>
+      <ul id="familyList"
+        class="dropdown-menu">
+      </ul>
+    </div>
+    <div id="questionSection"></div>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+      <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown">
+        <i id="theme-icon"
+          class="fa-regular fa-moon"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow"">
+        <li>
+          <button type="
+        button"
+        id="light-theme-button"
+        class="dropdown-item d-flex align-items-center"
+        onclick="setTheme('light')">
+        <i class="fa-regular fa-sun"></i>
+        &nbsp; Light
+        </button>
+        </li>
+        <li>
+          <button type="button"
+            id="dark-theme-button"
+            class="dropdown-item d-flex align-items-center active"
+            onclick="setTheme('dark')">
+            <i class="fa-regular fa-moon"></i>
+            &nbsp; Dark
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/snowfall.js"></script>
+</body>
+
+</html>
