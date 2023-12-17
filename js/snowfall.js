@@ -1,95 +1,133 @@
-(function () {
-  var COUNT = 300;
-  var masthead = document.querySelector(".snowfall");
-  console.log(typeof masthead);
-  var canvas = document.createElement("canvas");
-  var ctx = canvas.getContext("2d");
-  var width = masthead.clientWidth;
-  var height = masthead.clientHeight;
-  var i = 0;
-  var active = false;
+let snowflakesCount = 200; // Snowflake count, can be overwritten by attrs
+let baseCSS = ``;
 
-  function onResize() {
-    width = masthead.clientWidth;
-    height = masthead.clientHeight;
-    canvas.width = width;
-    canvas.height = height;
-    ctx.fillStyle = "#FFF";
+// set global attributes
+if (typeof SNOWFLAKES_COUNT !== "undefined") {
+  snowflakesCount = SNOWFLAKES_COUNT;
+}
+if (typeof BASE_CSS !== "undefined") {
+  baseCSS = BASE_CSS;
+}
 
-    var wasActive = active;
-    active = width > 600;
+let bodyHeightPx = null;
+let pageHeightVh = null;
 
-    if (!wasActive && active) requestAnimFrame(update);
+function setHeightVariables() {
+  bodyHeightPx = document.body.offsetHeight;
+  pageHeightVh = (100 * bodyHeightPx) / window.innerHeight;
+}
+
+// get params set in snow div
+function getSnowAttributes() {
+  const snowWrapper = document.getElementById("snow");
+  snowflakesCount = Number(snowWrapper?.dataset?.count || snowflakesCount);
+}
+
+// This function allows you to turn on and off the snow
+function showSnow(value) {
+  if (value) {
+    document.getElementById("snow").style.display = "block";
+  } else {
+    document.getElementById("snow").style.display = "none";
   }
+}
 
-  var Snowflake = function () {
-    this.x = 0;
-    this.y = 0;
-    this.vy = 0;
-    this.vx = 0;
-    this.r = 0;
-
-    this.reset();
-  };
-
-  Snowflake.prototype.reset = function () {
-    this.x = Math.random() * width;
-    this.y = Math.random() * -height;
-    this.vy = 1 + Math.random() * 3;
-    this.vx = 0.5 - Math.random();
-    this.r = 1 + Math.random() * 2;
-    this.o = 0.5 + Math.random() * 0.5;
-  };
-
-  canvas.style.position = "absolute";
-  canvas.style.left = canvas.style.top = "0";
-
-  var snowflakes = [],
-    snowflake;
-  for (i = 0; i < COUNT; i++) {
-    snowflake = new Snowflake();
-    snowflake.reset();
-    snowflakes.push(snowflake);
+// Creating snowflakes
+function generateSnow(snowDensity = 200) {
+  snowDensity -= 1;
+  const snowWrapper = document.getElementById("snow");
+  snowWrapper.innerHTML = "";
+  for (let i = 0; i < snowDensity; i++) {
+    let board = document.createElement("div");
+    board.className = "snowflake";
+    snowWrapper.appendChild(board);
   }
+}
 
-  function update() {
-    ctx.clearRect(0, 0, width, height);
+function getOrCreateCSSElement() {
+  let cssElement = document.getElementById("psjs-css");
+  if (cssElement) return cssElement;
 
-    if (!active) return;
+  cssElement = document.createElement("style");
+  cssElement.id = "psjs-css";
+  document.head.appendChild(cssElement);
+  return cssElement;
+}
 
-    for (i = 0; i < COUNT; i++) {
-      snowflake = snowflakes[i];
-      snowflake.y += snowflake.vy;
-      snowflake.x += snowflake.vx;
+// Append style for each snowflake to the head
+function addCSS(rule) {
+  const cssElement = getOrCreateCSSElement();
+  cssElement.innerHTML = rule; // safe to use innerHTML
+  document.head.appendChild(cssElement);
+}
 
-      ctx.globalAlpha = snowflake.o;
-      ctx.beginPath();
-      ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
-      ctx.closePath();
-      ctx.fill();
+// Math
+function randomInt(value = 100) {
+  return Math.floor(Math.random() * value) + 1;
+}
 
-      if (snowflake.y > height) {
-        snowflake.reset();
+function randomIntRange(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+// Create style for snowflake
+function generateSnowCSS(snowDensity = 200) {
+  let snowflakeName = "snowflake";
+  let rule = baseCSS;
+
+  for (let i = 1; i < snowDensity; i++) {
+    let randomX = Math.random() * 100; // vw
+    let randomOffset = Math.random() * 10; // vw;
+    let randomXEnd = randomX + randomOffset;
+    let randomXEndYoyo = randomX + randomOffset / 2;
+    let randomYoyoTime = getRandomArbitrary(0.3, 0.8);
+    let randomYoyoY = randomYoyoTime * pageHeightVh; // vh
+    let randomScale = Math.random();
+    let fallDuration = randomIntRange(10, (pageHeightVh / 10) * 3); // s
+    let fallDelay = randomInt((pageHeightVh / 10) * 3) * -1; // s
+    let opacity = Math.random();
+
+    rule += `
+      .${snowflakeName}:nth-child(${i}) {
+        opacity: ${opacity};
+        transform: translate(${randomX}vw, -10px) scale(${randomScale});
+        animation: fall-${i} ${fallDuration}s ${fallDelay}s linear infinite;
       }
-    }
-
-    requestAnimFrame(update);
-  }
-
-  // shim layer with setTimeout fallback
-  window.requestAnimFrame = (function () {
-    return (
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      function (callback) {
-        window.setTimeout(callback, 1000 / 60);
+      @keyframes fall-${i} {
+        ${randomYoyoTime * 100}% {
+          transform: translate(${randomXEnd}vw, ${randomYoyoY}vh) scale(${randomScale});
+        }
+        to {
+          transform: translate(${randomXEndYoyo}vw, ${pageHeightVh}vh) scale(${randomScale});
+        }
       }
-    );
-  })();
+    `;
+  }
+  addCSS(rule);
+}
 
-  onResize();
-  window.addEventListener("resize", onResize, false);
+// Load the rules and execute after the DOM loads
+function createSnow() {
+  setHeightVariables();
+  getSnowAttributes();
+  generateSnowCSS(snowflakesCount);
+  generateSnow(snowflakesCount);
+}
 
-  masthead.appendChild(canvas);
-})();
+window.addEventListener("resize", createSnow);
+
+// export createSnow function if using node or CommonJS environment
+if (typeof module !== "undefined") {
+  module.exports = {
+    createSnow,
+    showSnow,
+  };
+} else {
+  window.onload = createSnow;
+}

@@ -8,8 +8,6 @@ window.addEventListener("load", () => {
   } else {
     document.documentElement.setAttribute("data-bs-theme", "light");
   }
-  createToast("Merry Christmas!");
-  createErrorToast("Merry Christmas!");
 });
 
 function setTheme(theme) {
@@ -99,11 +97,11 @@ function submitAnswer(familyMemberObject) {
       url: `https://completefamilybyid-4fuif4r4iq-uc.a.run.app/${familyMemberObject["id"]}`,
     })
       .then((response) => {
-        console.log(response);
         getFamily();
       })
       .catch((error) => {
         console.log(error.response.data.error);
+        createErrorToast(error.response.data.error);
       });
   } else {
     createErrorToast("That's not right, try again.");
