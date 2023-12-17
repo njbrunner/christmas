@@ -62,7 +62,6 @@ function setSelectedFamilyMember(name) {
   const familyMemberObject = familyList.find(
     (member) => member["name"] === name
   );
-  console.log(familyMemberObject);
   const questionSection = document.getElementById("questionSection");
   questionSection.innerHTML = `
     <h3 class="text-center">${familyMemberObject["name"]}</h3>

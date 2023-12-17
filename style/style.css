@@ -1,5 +1,4 @@
 body {
-  /* background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); */
   overflow-x: hidden;
   min-height: 100vh;
   /* If you want to change the site height you can remove overflow-y */
@@ -12,7 +11,36 @@ body {
   width: 7px;
   height: 7px;
   background: linear-gradient(white, white);
-  /* Workaround for Chromium's selective color inversion */
   border-radius: 50%;
   filter: drop-shadow(0 0 2px white);
+}
+
+[data-bs-theme="light"] .snowflake {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(white, white);
+  filter: drop-shadow(0 0 4px white);
+}
+
+[data-bs-theme="light"] body {
+  background-color: #d3d3d3;
+}
+
+[data-bs-theme="light"] .bg-body-tertiary {
+  background-color: #e3e3e3 !important;
+  filter: drop-shadow(0 0 8px #cc231e);
+}
+
+.bg-body-tertiary {
+  filter: drop-shadow(0 0 8px #cc231e);
+}
+
+[data-bs-theme="light"] .christmas-text {
+  filter: drop-shadow(0 0 8px #ff7878);
+}
+.christmas-text {
+  color: #cc231e;
+  filter: drop-shadow(0 0 4px #ff7878);
+  font-family: "Parisienne", cursive;
+  font-size: 4em;
 }
